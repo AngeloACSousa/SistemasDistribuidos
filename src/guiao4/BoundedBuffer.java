@@ -17,7 +17,7 @@ public class BoundedBuffer {
             notifyAll();
             buffer[size] = v;
             System.out.println(buffer[size] + " Inserido");
-            imprimeBuffer();
+            printBuffer();
             size++;
         }
     }
@@ -32,7 +32,7 @@ public class BoundedBuffer {
             int res = buffer[size];
             buffer[size] = 0;
             System.out.println(res+ " Retirado");
-            imprimeBuffer();
+            printBuffer();
             return res;
         }
     }
@@ -42,7 +42,7 @@ public class BoundedBuffer {
         return size >= buffer.length;
     }
 
-    public void imprimeBuffer(){
+    public void printBuffer(){
         System.out.print("[");
         for(int i : buffer){
             System.out.print(i +", ");

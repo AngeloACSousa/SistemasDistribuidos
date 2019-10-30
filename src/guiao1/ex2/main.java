@@ -25,7 +25,7 @@ public class main {
 
     public static void main(String args[]){
         Counter counter = new Counter();
-        Thread[] threads = new Thread[10];
+        Thread[] threads = new Thread[100];
         int N = 100;
         int I = 200;
         for(int i = 0; i < N; i++){

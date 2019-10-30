@@ -16,7 +16,7 @@ public class BoundedBuffer {
             }
             notifyAll();
             buffer[size] = v;
-            System.out.println(buffer[size] + " Inserido");
+            System.out.println(buffer[size] + " Inserted");
             printBuffer();
             size++;
         }
@@ -24,14 +24,16 @@ public class BoundedBuffer {
 
     public int get() throws InterruptedException {
         synchronized (this) {
+
             while (size == 0) {
                 this.wait();
             }
+
             notifyAll();
             size--;
             int res = buffer[size];
             buffer[size] = 0;
-            System.out.println(res+ " Retirado");
+            System.out.println(res+ " Removed");
             printBuffer();
             return res;
         }

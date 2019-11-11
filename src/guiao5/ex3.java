@@ -15,6 +15,7 @@ class Reader implements Runnable{
     public void run() {
         try {
             rw.readLock();
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }finally {
@@ -34,6 +35,7 @@ class Writer implements Runnable{
     public void run() {
         try {
             rw.writeLock();
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }finally {
@@ -63,8 +65,10 @@ class RWLock{
         while(writer){
             waitReader.await();
         }
+
         readers++;
         System.out.println("Leitor lock");
+        System.out.println("Número de leitores: " + readers);
         rwLock.unlock();
     }
 
@@ -83,6 +87,68 @@ class RWLock{
         while(writer || readers > 0){
             waitWriter.await();
         }
+        System.out.println("Escritor lock");
+        writer = true;
+        rwLock.unlock();
+    }
+
+    void writeUnlock(){
+        rwLock.lock();
+        writer = false;
+        waitWriter.signal();
+        waitReader.signalAll();
+        System.out.println("Escritor unlock");
+        rwLock.unlock();
+    }
+}
+
+
+class RWLockV2{
+
+    int readers;
+    boolean writer;
+    Lock rwLock;
+    Condition waitWriter;
+    Condition waitReader;
+    int writersRequest;
+
+    RWLockV2(){
+        readers = 0;
+        writer = false;
+        writersRequest = 0;
+        rwLock = new ReentrantLock();
+        waitWriter = rwLock.newCondition();
+        waitReader = rwLock.newCondition();
+    }
+
+    void readLock() throws InterruptedException{
+        rwLock.lock();
+        while(writer || writersRequest > 0){
+            waitReader.await();
+        }
+        readers++;
+        System.out.println("Leitor lock");
+        System.out.println("Número de leitores: " + readers);
+        rwLock.unlock();
+    }
+
+    void readUnlock(){
+        rwLock.lock();
+        readers--;
+        if(readers == 0){
+            waitWriter.signal();
+        }
+        System.out.println("Leitor unlock");
+        rwLock.unlock();
+    }
+
+    void writeLock() throws InterruptedException{
+        rwLock.lock();
+        writersRequest++;
+        while(writer || readers > 0){
+            waitWriter.await();
+        }
+        writersRequest--;
         System.out.println("Escritor lock");
         writer = true;
         rwLock.unlock();
@@ -122,5 +188,6 @@ public class ex3 {
         }
     }
 }
+
 
 

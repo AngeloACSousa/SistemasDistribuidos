@@ -22,7 +22,7 @@ public class Client{
 
         String input;
 
-        while(!(input = in.readLine()).equals("quit")){
+        while(!(input = in.readLine()).equals("Quit")){
             pw.println(input);
             pw.flush();
             System.out.println("Echo: " + br.readLine());

@@ -9,11 +9,11 @@ public class Server2 {
         try {
             ServerSocket server = new ServerSocket(port);
             int id = 0;
+            System.out.println("Server Starting");
             while (true) {
-                Thread st =  new Thread(new ServerThread(server.accept(), id)) ;
+                new Thread(new ServerThread(server.accept(), id++)).start() ;
                 System.out.println("New Client Connected, id: " + id);
-                st.start();
-                id++;
+
             }
         }catch(IOException e){
             e.printStackTrace();
